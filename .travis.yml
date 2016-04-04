@@ -1,0 +1,14 @@
+language: c
+dist: trusty
+before_script:
+- sudo apt-get update
+# `yes` pipe doesn't work for unknown reasons (print 1000s of lines of y)
+- sudo apt-get --assume-yes build-dep cogl gettext
+# requires `gettext` 0.19.x; output > 10000 lines which causes travis-ci.org to hide output
+- wget http://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.7.tar.xz && tar xf gettext-0.19.7.tar.xz && cd gettext-0.19.7 && ./configure && make -j16 > /tmp/gettext-make.log && sudo make install && cd ..
+script:
+# runs `configure`
+- ./autogen.sh
+- make -j16
+- make -j16 check
+- sudo make install
